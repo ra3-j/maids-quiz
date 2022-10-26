@@ -1,0 +1,49 @@
+<div class="header">
+  <div>
+    <h1>Users</h1>
+  </div>
+  <mat-form-field>
+    <mat-icon  class="search-icon" matSuffix>person_search</mat-icon>
+    <input matInput type="search" placeholder="Enter User ID" name="search" [(ngModel)]="searchField"
+      (keyup)="search()" pattern="[0-9]+">
+      <mat-error>
+        Only Numbers
+      </mat-error>
+  </mat-form-field>
+</div>
+<mat-progress-bar mode="indeterminate" *ngIf="!filteredUSersList?.length && !searchField"></mat-progress-bar>
+<div *ngIf="filteredUSersList.length">
+    <div>
+      <mat-grid-list [cols]="pageCls" rows="1"  rowHeight="2:3" (window:resize)="onResize($event)">
+        <div *ngFor="let user of filteredUSersList">
+            <mat-grid-tile>
+                <mat-card (click)="goToUserDetails(user.id)" class="click-user-card">
+                  <div>
+                    <img [src]="user?.avatar" class="avatar" alt="User Avatar">
+                  </div>
+                  <div>
+                    ID: {{user?.id}}
+                  </div>
+                  <div>
+                    Name: <span class="content">{{user?.first_name+' '+user?.last_name}}</span>
+                  </div>
+                  <div>
+                    Email: <span class="content">{{user?.email}}</span>
+                  </div>
+                </mat-card>
+            </mat-grid-tile>
+        </div>
+        </mat-grid-list>
+    </div>
+    <div class="bottom">
+      <mat-paginator [length]="usersTotalCount"
+                  [pageSize]="usersCountInPage"
+                  [pageSizeOptions]="[6]"
+                  aria-label="Select page"
+                  (page)="fetchPage($event)">
+    </mat-paginator>
+    </div>
+</div>
+<div *ngIf="!filteredUSersList.length">
+<img class="no-user" src="../../../assets/images/nousers.png">
+</div>
